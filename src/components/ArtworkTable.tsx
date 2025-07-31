@@ -87,26 +87,26 @@ const ArtworkTable: React.FC = () => {
     currentPageSelection.includes(art.id)
   );
 
-  const handleSelectRows = async (id: string) => {
+  const handleSelectRows = async () => {
   if (rowsToSelect <= 0) return;
 
   setIsSelecting(true);
   setSelectionProgress(0);
 
   const updatedMap = new Map<number, Set<number>>();
-  const selectedIds = new Set<number>();
+//   const selectedIds = new Set<number>();
 
   const totalPages = Math.ceil(rowsToSelect / rows);
 
   let remaining = rowsToSelect;
 
   for (let page = 1; page <= totalPages; page++) {
-    const limit = Math.min(rows, remaining); // ✅ Fix for small row selection
+    const limit = Math.min(rows, remaining); 
     const json = await fetchArtworks(page, limit);
 
     if (json && json.data) {
       const ids = json.data.map((art: Artwork) => art.id);
-      ids.forEach((id) => selectedIds.add(id));
+    //   ids.forEach((id) => selectedIds.add(id));
       updatedMap.set(page, new Set(ids));
     }
 
