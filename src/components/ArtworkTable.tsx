@@ -67,7 +67,7 @@ const ArtworkTable: React.FC = () => {
 
   const onSelectionChange = (e: { value: Artwork[] }) => {
     const selectedIds: number[] = e.value.map((row: Artwork) => row.id);
-     console.log("🟢 Current page id :", selectedIds);
+     console.log("🟢 Current page selected IDs:", selectedIds);
     setCurrentPageSelection(selectedIds);
 
     const updatedMap = new Map(selectedRowsMap);
@@ -75,13 +75,13 @@ const ArtworkTable: React.FC = () => {
     setSelectedRowsMap(updatedMap);
   };
 
-//   const getAllSelectedIds = () => {
-//     const allSelectedIds: Set<number> = new Set();
-//     for (const set of selectedRowsMap.values()) {
-//       set.forEach((id) => allSelectedIds.add(id));
-//     }
-//     return Array.from(allSelectedIds);
-//   };
+  const getAllSelectedIds = () => {
+    const allSelectedIds: Set<number> = new Set();
+    for (const set of selectedRowsMap.values()) {
+      set.forEach((id) => allSelectedIds.add(id));
+    }
+    return Array.from(allSelectedIds);
+  };
 
   const selectionFromIds = artworks.filter((art) =>
     currentPageSelection.includes(art.id)
@@ -97,12 +97,11 @@ const ArtworkTable: React.FC = () => {
   const selectedIds = new Set<number>();
 
   const totalPages = Math.ceil(rowsToSelect / rows);
-  console.log(` selection for ${rowsToSelect} to ${totalPages} pages`);
 
   let remaining = rowsToSelect;
 
   for (let page = 1; page <= totalPages; page++) {
-    const limit = Math.min(rows, remaining); 
+    const limit = Math.min(rows, remaining); // ✅ Fix for small row selection
     const json = await fetchArtworks(page, limit);
 
     if (json && json.data) {
@@ -140,7 +139,7 @@ const ArtworkTable: React.FC = () => {
             
           />
           <Button label="Submit" className="custom-button" onClick={handleSelectRows} />
-          <style >{`
+          <style>{`
   .custom-button {
     width: 50%;
     background-color: black;
@@ -149,11 +148,11 @@ const ArtworkTable: React.FC = () => {
     
   }
 `}</style>
-          {/* {isSelecting && (
+          {isSelecting && (
             <div className="mt-2">
               <ProgressBar value={selectionProgress} />
             </div>
-          )} */}
+          )}
         </div>
       </OverlayPanel>
 
@@ -195,17 +194,17 @@ const ArtworkTable: React.FC = () => {
         // disabled={isSelecting}
       />
 
-      {/* <div>
+      <div>
         <h3 >Selected Artworks:</h3>
         <div  style={{ backgroundColor: '#f8f9fa' }}>
           <div >Total selected: {getAllSelectedIds().length} rows</div>
           <ul >
-            {getAllSelectedIds().map((id: number) => (
+            {getAllSelectedIds().map((id) => (
               <li key={id}>Artwork ID: {id}</li>
             ))}
           </ul>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
