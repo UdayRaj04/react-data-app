@@ -87,7 +87,7 @@ const ArtworkTable: React.FC = () => {
     currentPageSelection.includes(art.id)
   );
 
-  const handleSelectRows = async () => {
+  const handleSelectRows = async (id: string) => {
   if (rowsToSelect <= 0) return;
 
   setIsSelecting(true);
