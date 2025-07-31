@@ -140,7 +140,7 @@ const ArtworkTable: React.FC = () => {
             
           />
           <Button label="Submit" className="custom-button" onClick={handleSelectRows} />
-          <style tsx>{`
+          <style >{`
   .custom-button {
     width: 50%;
     background-color: black;
