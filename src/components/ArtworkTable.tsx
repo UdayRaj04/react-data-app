@@ -192,7 +192,7 @@ const ArtworkTable: React.FC = () => {
         totalRecords={totalRecords}
         onPageChange={onPageChange}
         
-        disabled={isSelecting}
+        // disabled={isSelecting}
       />
 
       {/* <div>
@@ -200,7 +200,7 @@ const ArtworkTable: React.FC = () => {
         <div  style={{ backgroundColor: '#f8f9fa' }}>
           <div >Total selected: {getAllSelectedIds().length} rows</div>
           <ul >
-            {getAllSelectedIds().map((id) => (
+            {getAllSelectedIds().map((id: number) => (
               <li key={id}>Artwork ID: {id}</li>
             ))}
           </ul>
