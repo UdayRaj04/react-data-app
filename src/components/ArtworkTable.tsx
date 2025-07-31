@@ -149,11 +149,11 @@ const ArtworkTable: React.FC = () => {
     
   }
 `}</style>
-          {isSelecting && (
+          {/* {isSelecting && (
             <div className="mt-2">
               <ProgressBar value={selectionProgress} />
             </div>
-          )}
+          )} */}
         </div>
       </OverlayPanel>
 
