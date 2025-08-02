@@ -87,6 +87,45 @@ const ArtworkTable: React.FC = () => {
     currentPageSelection.includes(art.id)
   );
 
+//   const handleSelectRows = async () => {
+//   if (rowsToSelect <= 0) return;
+
+//   setIsSelecting(true);
+//   setSelectionProgress(0);
+
+//   const updatedMap = new Map<number, Set<number>>();
+// //   const selectedIds = new Set<number>();
+
+//   const totalPages = Math.ceil(rowsToSelect / rows);
+
+//   let remaining = rowsToSelect;
+
+//   for (let page = 1; page <= totalPages; page++) {
+//     const limit = Math.min(rows, remaining); 
+//     const json = await fetchArtworks(page, limit);
+
+//     if (json && json.data) {
+//       const ids = json.data.map((art: Artwork) => art.id);
+//     //   ids.forEach((id) => selectedIds.add(id));
+//       updatedMap.set(page, new Set(ids));
+//     }
+
+//     setSelectionProgress(Math.round((page / totalPages) * 100));
+//     remaining -= limit;
+//   }
+
+//   setSelectedRowsMap(updatedMap);
+
+//   if (updatedMap.has(currentPage)) {
+//     setCurrentPageSelection(Array.from(updatedMap.get(currentPage)!));
+//   } else {
+//     setCurrentPageSelection([]);
+//   }
+
+//   setIsSelecting(false);
+//   overlayRef.current?.hide();
+// };
+
   const handleSelectRows = async () => {
   if (rowsToSelect <= 0) return;
 
@@ -94,30 +133,40 @@ const ArtworkTable: React.FC = () => {
   setSelectionProgress(0);
 
   const updatedMap = new Map<number, Set<number>>();
-//   const selectedIds = new Set<number>();
+  let selectedCount = 0;
+  let page = 1;
 
-  const totalPages = Math.ceil(rowsToSelect / rows);
-
-  let remaining = rowsToSelect;
-
-  for (let page = 1; page <= totalPages; page++) {
-    const limit = Math.min(rows, remaining); 
-    const json = await fetchArtworks(page, limit);
+  while (selectedCount < rowsToSelect) {
+    const json = await fetchArtworks(page, rows); // fixed `limit` usage to match API
 
     if (json && json.data) {
       const ids = json.data.map((art: Artwork) => art.id);
-    //   ids.forEach((id) => selectedIds.add(id));
-      updatedMap.set(page, new Set(ids));
+
+      // Take only the number of ids we still need
+      const needed = rowsToSelect - selectedCount;
+      const selectedIds = ids.slice(0, needed);
+
+      if (selectedIds.length === 0) break;
+
+      updatedMap.set(page, new Set(selectedIds));
+      selectedCount += selectedIds.length;
+
+      // Update progress
+      const estimatedTotalPages = Math.ceil(rowsToSelect / rows);
+      setSelectionProgress(Math.round((page / estimatedTotalPages) * 100));
+    } else {
+      break; // Exit loop if fetch failed
     }
 
-    setSelectionProgress(Math.round((page / totalPages) * 100));
-    remaining -= limit;
+    page++;
   }
 
   setSelectedRowsMap(updatedMap);
 
-  if (updatedMap.has(currentPage)) {
-    setCurrentPageSelection(Array.from(updatedMap.get(currentPage)!));
+  // Update current page selection properly
+  const cp = Math.floor(first / rows) + 1; // Adjust for correct current page
+  if (updatedMap.has(cp)) {
+    setCurrentPageSelection(Array.from(updatedMap.get(cp)!));
   } else {
     setCurrentPageSelection([]);
   }
@@ -191,7 +240,7 @@ const ArtworkTable: React.FC = () => {
         totalRecords={totalRecords}
         onPageChange={onPageChange}
         
-        // disabled={isSelecting}
+        disabled={isSelecting}
       />
 
       <div>
