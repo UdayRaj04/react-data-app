@@ -240,7 +240,7 @@ const ArtworkTable: React.FC = () => {
         totalRecords={totalRecords}
         onPageChange={onPageChange}
         
-        disabled={isSelecting}
+        // disabled={isSelecting}
       />
 
       <div>
